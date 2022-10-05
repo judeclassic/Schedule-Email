@@ -12,13 +12,13 @@ describe('Checking Endpoints Of API', () => {
         const res = await request(app)
         .post('/v1/api/schedule/set')
         .send({
-            email: 'judexa24@gmail.com',
-            id: '1234454545t',
+            id: '111111111111111',
+            email:  'judexa24@gmail.com',
             name: 'Jude Classic',
-            position: 'Software Enginer',
-            time: '2s',
-            subject: 'start a class now',
-            template: 'acceptance'
+            template: 'https://lovely-twilight-c0df91.netlify.app/email-11.html',
+            position: 'software developer',
+            time: '2m',
+            subject: 'Update your profile'
         });
 
         expect(res.statusCode).toEqual(200);
@@ -29,7 +29,7 @@ describe('Checking Endpoints Of API', () => {
         const res = await request(app)
         .post('/v1/api/schedule/cancel')
         .send({
-            id: '1234454545t',
+            id: '111111111111111',
         });
 
         expect(res.statusCode).toEqual(200);

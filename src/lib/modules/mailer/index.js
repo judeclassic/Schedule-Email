@@ -18,7 +18,6 @@ class Mailer {
     }
 
     init = async ()=>{
-        console.log( DEFAULT_SES_USER);
 
         this.transporter = nodeMailer.createTransport({
             pool: true,
@@ -45,11 +44,10 @@ class Mailer {
     }
 
     async sendReminderEmail(to, subject, content, info) {
-        const { name, position } = info;
+        const { name } = info;
         let htmlContent = content;
-        htmlContent = htmlContent.replace('{{name}}', name);
-        htmlContent = htmlContent.replace('{{name}}', name);
-        htmlContent = htmlContent.replace('{{position}}', position);
+        htmlContent = htmlContent.replace('John', name);
+        htmlContent = htmlContent.replace('John', name);
          
         const MAIL_CONTENT = {
             to: to, // list of receivers

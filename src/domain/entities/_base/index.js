@@ -99,27 +99,30 @@ class BaseEntity {
         return { status: true, data: {id} }
     }
 
-    _validateTemplate = (template) => {
-        if (!template) {
+    _validateTemplateLink = (link) => {
+        let linkRegex = /[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/
+
+        if (!link ) {
             if (!this.strongChecked) {
                 return ({status: true});
             }
-            return ({status: false, messages: "id cannot be null"});
+            return ({status: false, messages: "Template Link cannot be null"});
         }
+        if (!linkRegex.test(link)) {
+            return ({status: false, messages: "Template Link is Invalid"});
+        }
+        return ({status: true, data: {link}});
+    }
 
-        if ( template.length < 10 ) {
-            return ({status: false, messages: "id cannot be less than 10 characters"});
-        }
+    _validateSubject = (link) => {
 
-        if ( template.length > 40 ) {
-            return ({status: false, messages: "id cannot be greater than 40 characters"});
+        if (!link ) {
+            if (!this.strongChecked) {
+                return ({status: true});
+            }
+            return ({status: false, messages: "Subject cannot be null"});
         }
-        
-        if ( template.length > 40 ) {
-            return ({status: false, messages: "id cannot be greater than 40 characters"});
-        }
-
-        return { status: true, data: {template} }
+        return ({status: true, data: {link}});
     }
 
     _validateCountry = (country, countries) => {

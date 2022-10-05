@@ -1,18 +1,18 @@
+//@ts-check
 const BaseEntity = require("../_base");
 
-//@ts-check
 class MailingEntity extends BaseEntity {
     constructor() {
         super();
         this.strongChecked = true;
     }
 
-    validateModel = ({ id, name, email, template, position }) => {
+    validateModel = ({ id, name, email, template, subject }) => {
         try {
             let error = [];
 
             const idValidity = this._validateID(id);
-            if (id && !idValidity.status) {
+            if (!idValidity.status) {
                 error.push(idValidity.messages)
             }
 
@@ -23,17 +23,15 @@ class MailingEntity extends BaseEntity {
 
             const nameValidity = this._validateName(name);
             if (!nameValidity.status) {
-                
                 error.push(nameValidity.messages)
             }
 
-            const positionValidity = this._validateWithStandard({position});
-            if (!positionValidity.status) {
-                
-                error.push(positionValidity.messages)
+            const validateSubject = this._validateSubject(subject);
+            if (!validateSubject.status) {
+                error.push(validateSubject.messages)
             }
 
-            const templateValidity = this._validateTemplate(template);
+            const templateValidity = this._validateTemplateLink(template);
             if (!templateValidity.status) {
                 error.push(templateValidity.messages)
             }
@@ -48,7 +46,7 @@ class MailingEntity extends BaseEntity {
 
             return {
                 status: true,
-                data: {...emailValidity.data, ...nameValidity.data, ...templateValidity.data, ...positionValidity.data}
+                data: {...emailValidity.data, ...nameValidity.data, ...templateValidity.data,}
             }
 
         } catch(err) {

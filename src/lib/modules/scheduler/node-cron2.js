@@ -1,60 +1,64 @@
 //@ts-check
-var schedule = require('node-schedule');
+const Cron = require('node-cron');
 
 class Scheduler {
     constructor() {
         this.actions = {};
     }
 
-    _schedule = ({id, action, date}) => {
-
-        const ddd = schedule.scheduleJob(date, function(){
+    _schedule = ({id, action, cron, repeated}) => {
+        this.actions[id] = Cron.schedule(cron, () => {
             action();
-            console.log('sent')
+            if (!repeated) {
+                this.actions[id].stop();
+            }
+        }, {
+            scheduled: false,
         });
+        this.actions[id].start();
     }
 
     cancel = ({id}) => {
         if (this.actions[id]) {
-            this.actions[id].cancel();
+            this.actions[id].stop();
             delete this.actions[id];
         }
     }
 
     scheduleForTwoHours = (action, id) => {
-        let date = new Date()
-        date.setHours(date.getHours() + 2)
-        this._schedule({action, id, date});
+        const hours = this._calculateWithHoursCron(2);
+        let cron = `* * * * ${hours}`;
+        this._schedule({action, id, cron, repeated:false});
     }
     
     scheduleForFourHours = (action, id) => {
-        let date = new Date()
-        date.setHours(date.getHours() + 4)
-        this._schedule({action, id, date});
+        const hours = this._calculateWithHoursCron(4);
+        let cron = `* * * * ${hours}`;
+        this._schedule({action, id, cron, repeated:false});
     }
     
     scheduleForTwoFourHours = (action, id) => {
-        let date = new Date()
-        date.setDate(date.getDate() + 1)
-        this._schedule({action, id, date});
+        const days = this._calculateWithDayCron(1);
+        let cron = `* * * * * ${days}`;
+        this._schedule({action, id, cron, repeated:false});
     }
 
     scheduleForFourtyEightHours = (action, id) => {
-        let date = new Date()
-        date.setDate(date.getDate() + 1)
-        this._schedule({action, id, date});
+        const days = this._calculateWithDayCron(2);
+        let cron = `* * * * * ${days}`;
+        this._schedule({action, id, cron, repeated:false});
     }
 
     scheduleForTwoSeconds = (action, id) => {
-        let date = new Date()
-        date.setSeconds(date.getSeconds() + 2)
-        this._schedule({action, id, date});
+        const sec = this._calculateWithSecondsCron(2);
+        let cron = `* * * * * *`;
+        this._schedule({action, id, cron, repeated:false});
     }
 
     scheduleForTwoMinutes = (action, id) => {
-        let date = new Date()
-        date.setMinutes(date.getMinutes() + 1)
-        this._schedule({action, id, date});
+        const min = this._calculateWithMinutesCron(2);
+        let cron = `* * * * *`;
+        this._schedule({action, id, cron, repeated:false});
     }
 
     _calculateWithDayCron = (dday) => {
